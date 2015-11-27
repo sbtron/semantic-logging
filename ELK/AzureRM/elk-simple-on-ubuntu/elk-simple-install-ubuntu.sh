@@ -29,7 +29,7 @@ log()
 }
 
 #Loop through options passed
-while getopts :n:v:d:e:sh optname; do
+while getopts :n:v:d:e:a:k:sh optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
 	n)
@@ -43,6 +43,12 @@ while getopts :n:v:d:e:sh optname; do
 	  ;;
 	e)
 	  ENCODED_LOGSTASH_CONFIG=${OPTARG}
+	  ;;
+	a)
+	  STORAGE_ACCOUNT=${OPTARG}
+	  ;;
+	k)
+	  STORAGE_KEY=${OPTARG}
 	  ;;
 	s)  #skip common install steps
 	  SKIP_COMMON_INSTALL="YES"
@@ -73,7 +79,7 @@ log "Installing Elasticsearch Completed"
 
 #Install Logstash
 log "Installing Logstash"
-bash ./logstash-install-ubuntu.sh -e $ENCODED_LOGSTASH_CONFIG
+bash ./logstash-install-ubuntu.sh -a $STORAGE_ACCOUNT -k $STORAGE_KEY
 log "Installing Logstash Completed"
 
 log "Installing Kibana 4"

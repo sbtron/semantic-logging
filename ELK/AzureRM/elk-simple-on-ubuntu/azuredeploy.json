@@ -43,10 +43,22 @@
                 "description": "Password for the Virtual Machine."
             }
         },
-        "dnsNameForPublicIP": {
-            "type": "string",
+      "dnsNameForPublicIP": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "diagnosticsStorageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Diagnostics storage account name."
+        }
+      },
+      "diagnosticsStorageAccountKey": {
+            "type": "securestring",
             "metadata": {
-                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+                "description": "Key for diagnostics storage account"
             }
         },
         "ubuntuOSVersion": {
@@ -85,7 +97,7 @@
         "vmSize": "Standard_D1",
         "virtualNetworkName": "MyVNET",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
+      "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
     },
     "resources": [
         {
@@ -228,7 +240,7 @@
                 "typeHandlerVersion": "1.2",
                 "settings": {
                     "fileUris": [ "https://raw.githubusercontent.com/mspnp/semantic-logging/elk/ELK/AzureRM/elk-simple-on-ubuntu/elk-simple-install-ubuntu.sh" ],
-                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -e ', parameters('encodedConfigString'))]"
+                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('diagnosticStorageAccountName'), ' -k ', parameters('diagnosticStorageAccountKey'))]"
                 }
             }
         }

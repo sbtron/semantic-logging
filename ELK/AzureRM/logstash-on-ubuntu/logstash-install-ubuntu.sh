@@ -44,7 +44,7 @@ log()
 LOGSTASH_DEBIAN_PACKAGE_URL="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
 
 #Loop through options passed
-while getopts :p:e:hs optname; do
+while getopts :p:e:k:hs optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
     p)  #package url
@@ -57,10 +57,21 @@ while getopts :p:e:hs optname; do
       help
       exit 2
       ;;
+    k)  #set storage account name
+	  log "Setting the storage account name"
+      STORAGE_ACCOUNT_NAME="${OPTARG}"
+      ;;
+    k)  #set storage account key
+	  log "Setting the storage account key"
+      STORAGE_ACCOUNT_KEY="${OPTARG}"
+      GEN_CONF_FILE="true"
+      exit 2
+      ;;
     e)  #set the encoded configuration string
 	  log "Setting the encoded configuration string"
       CONF_FILE_ENCODED_STRING="${OPTARG}"
       USE_CONF_FILE_FROM_ENCODED_STRING="true"
+      exit 2
       ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -97,6 +108,14 @@ then
   log "$DECODED_STRING"
   echo $DECODED_STRING > ~/logstash.conf
 fi
+
+if [ ! -z $GEN_CONF_FILE] 
+then
+  log "Generating Logstash Config"
+  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}} > ~/logstash.conf
+  echo "output {elasticsearch {host => 'localhost' protocol => 'http' port => 9200 }}" >> ~/logstash.conf
+fi
+
 
 # Install Azure
 log "Installing Azure SDK"
