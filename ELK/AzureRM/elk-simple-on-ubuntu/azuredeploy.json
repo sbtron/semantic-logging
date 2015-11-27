@@ -25,12 +25,6 @@
                 "description": "Base64 encoded Logstash configuration string."
             }
         },
-        "newStorageAccountName": {
-            "type": "string",
-            "metadata": {
-                "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
-            }
-        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -80,7 +74,8 @@
         }
     },
     "variables": {
-        "esDiscoveryHosts": "10.0.0.1-3",
+      "newStorageAccountName"  : "[concat('strg', uniqueString(resourceGroup().id))]",
+      "esDiscoveryHosts": "10.0.0.1-3",
         "extensionName": "ELKSimple",
         "location": "West US",
         "imagePublisher": "Canonical",
@@ -103,7 +98,7 @@
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
-            "name": "[parameters('newStorageAccountName')]",
+            "name": "[variables('newStorageAccountName')]",
             "apiVersion": "2015-05-01-preview",
             "location": "[variables('location')]",
             "tags": {
@@ -190,7 +185,7 @@
                 "displayName": "VirtualMachine"
             },
             "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
             ],
             "properties": {
@@ -212,7 +207,7 @@
                     "osDisk": {
                         "name": "osdisk",
                         "vhd": {
-                            "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+                            "uri": "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
                         },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"

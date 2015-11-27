@@ -68,7 +68,7 @@ done
 #ELK (Simple) Install Script
 mkdir /opt/elk-simple/
 sudo \cp -f elasticsearch-ubuntu-install.sh /opt/elk-simple/elasticsearch-ubuntu-install.sh
-sudo \cp -f logstash-install-ubuntu.sh /opt/elk-simple/elasticsearch-ubuntu-install.sh
+sudo \cp -f logstash-install-ubuntu.sh /opt/elk-simple/logstash-install-ubuntu.sh
 sudo \cp -f kibana4-install-ubuntu.sh /opt/elk-simple/kibana4-install-ubuntu.sh
 sudo \cp -f azurewadtable.rb /opt/elk-simple/azurewadtable.rb
 
