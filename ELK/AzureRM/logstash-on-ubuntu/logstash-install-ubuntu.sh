@@ -65,7 +65,6 @@ while getopts :p:a:k:e:hs optname; do
 	  log "Setting the storage account key"
       STORAGE_ACCOUNT_KEY="${OPTARG}"
       GEN_CONF_FILE="true"
-      exit 2
       ;;
     e)  #set the encoded configuration string
 	  log "Setting the encoded configuration string"
