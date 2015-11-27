@@ -97,7 +97,8 @@
         "vmSize": "Standard_D1",
         "virtualNetworkName": "MyVNET",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-      "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
+      "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+      "baseURL": "https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/"
     },
     "resources": [
         {
@@ -239,7 +240,7 @@
                 "type": "CustomScriptForLinux",
                 "typeHandlerVersion": "1.2",
                 "settings": {
-                    "fileUris": [ "https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/AzureRM/elk-simple-on-ubuntu/elk-simple-install-ubuntu.sh" ],
+                    "fileUris": [ "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/elk-simple-install-ubuntu.sh')]", "[concat(variables('baseURL'),'AzureRM/logstash-on-ubuntu/logstash-install-ubuntu.sh')]","[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/kibana4-install-ubuntu.sh')]","https://raw.githubusercontent.com/juliusl/azure-quickstart-templates/master/elasticsearch/elasticsearch-ubuntu-install.sh","[concat(variables('baseURL'),'logstash-extension/inputs/azurewadtable.rb')]"],
                     "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('diagnosticsStorageAccountName'), ' -k ', parameters('diagnosticsStorageAccountKey'))]"
                 }
             }

@@ -44,7 +44,7 @@ log()
 LOGSTASH_DEBIAN_PACKAGE_URL="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
 
 #Loop through options passed
-while getopts :p:e:k:hs optname; do
+while getopts :p:a:k:e:hs optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
     p)  #package url
@@ -109,11 +109,12 @@ then
   echo $DECODED_STRING > ~/logstash.conf
 fi
 
-if [ ! -z $GEN_CONF_FILE] 
+if [ ! -z $GEN_CONF_FILE ] 
 then
   log "Generating Logstash Config"
-  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}} > ~/logstash.conf
+  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}}" > ~/logstash.conf
   echo "output {elasticsearch {host => 'localhost' protocol => 'http' port => 9200 }}" >> ~/logstash.conf
+  cat ~/logstash.conf
 fi
 
 
@@ -123,11 +124,12 @@ sudo env GEM_HOME=/opt/logstash/vendor/bundle/jruby/1.9 GEM_PATH=\"\" java -jar 
 
 # Install Plugins
 log "Installing Plugins"
-sudo env GEM_HOME=/opt/logstash/vendor/bundle/jruby/1.9 GEM_PATH=\"\" java -jar /opt/logstash/vendor/jar/jruby-complete-1.7.11.jar -S gem install logstash-input-azurewadtable
+#sudo env GEM_HOME=/opt/logstash/vendor/bundle/jruby/1.9 GEM_PATH=\"\" java -jar /opt/logstash/vendor/jar/jruby-complete-1.7.11.jar -S gem install logstash-input-azurewadtable
 
 # Copy Plugins
 log "Copying plugins"
-sudo \cp -f /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-input-azurewadtable-0.9.2/lib/logstash/inputs/azurewadtable.rb /opt/logstash/lib/logstash/inputs/azurewadtable.rb
+#sudo \cp -f /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-input-azurewadtable-0.9.2/lib/logstash/inputs/azurewadtable.rb /opt/logstash/lib/logstash/inputs/azurewadtable.rb
+sudo \cp -f azurewadtable.rb /opt/logstash/lib/logstash/inputs/azurewadtable.rb
 
 #log "Installing user configuration file"
 log "Installing user configuration file"
