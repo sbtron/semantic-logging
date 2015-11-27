@@ -57,7 +57,7 @@ while getopts :p:a:k:e:hs optname; do
       help
       exit 2
       ;;
-    k)  #set storage account name
+    a)  #set storage account name
 	  log "Setting the storage account name"
       STORAGE_ACCOUNT_NAME="${OPTARG}"
       ;;
@@ -112,7 +112,10 @@ fi
 if [ ! -z $GEN_CONF_FILE ] 
 then
   log "Generating Logstash Config"
-  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}}" > ~/logstash.conf
+  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}" > ~/logstash.conf
+  echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADPerformanceCountersTable'}" >> ~/logstash.conf
+  echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADWindowsEventLogsTable'}" >> ~/logstash.conf
+  echo " }" >> ~/logstash.conf
   echo "output {elasticsearch {host => 'localhost' protocol => 'http' port => 9200 }}" >> ~/logstash.conf
   cat ~/logstash.conf
 fi

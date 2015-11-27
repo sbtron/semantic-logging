@@ -67,7 +67,12 @@ done
 
 #ELK (Simple) Install Script
 mkdir /opt/elk-simple/
-#cd /opt/elk-simple/
+sudo \cp -f elasticsearch-ubuntu-install.sh /opt/elk-simple/elasticsearch-ubuntu-install.sh
+sudo \cp -f logstash-install-ubuntu.sh /opt/elk-simple/elasticsearch-ubuntu-install.sh
+sudo \cp -f kibana4-install-ubuntu.sh /opt/elk-simple/kibana4-install-ubuntu.sh
+sudo \cp -f azurewadtable.rb /opt/elk-simple/azurewadtable.rb
+
+cd /opt/elk-simple/
 #wget https://raw.githubusercontent.com/juliusl/azure-quickstart-templates/master/elasticsearch/elasticsearch-ubuntu-install.sh
 #wget https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/AzureRM/logstash-on-ubuntu/logstash-install-ubuntu.sh
 #wget https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/AzureRM/elk-simple-on-ubuntu/kibana4-install-ubuntu.sh
