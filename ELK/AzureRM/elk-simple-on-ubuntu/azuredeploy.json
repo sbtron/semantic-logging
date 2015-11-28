@@ -239,10 +239,11 @@
             "properties": {
                 "publisher": "Microsoft.OSTCExtensions",
                 "type": "CustomScriptForLinux",
-                "typeHandlerVersion": "1.2",
+              "typeHandlerVersion": "1.2",
+              "autoUpgradeMinorVersion": "true",
                 "settings": {
                     "fileUris": [ "[variables('install_elksimple')]", "[variables('install_es')]","[variables('install_logstash')]","[variables('install_kibana4')]","[variables('ruby_azurewadtable')]"],
-                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('existingDiagnosticsStorageAccountName'), ' -k ', parameters('existingDiagnosticsStorageAccountKey'))]"
+                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('existingDiagnosticsStorageAccountName'), ' -k ', parameters('existingDiagnosticsStorageAccountKey'),' -t ', parameters('diagnosticsTableNames'))]"
                 }
             }
         }
