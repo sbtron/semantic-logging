@@ -44,7 +44,7 @@ log()
 LOGSTASH_DEBIAN_PACKAGE_URL="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
 
 #Loop through options passed
-while getopts :p:a:k:e:hs optname; do
+while getopts :p:a:k:t:e:hs optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
     p)  #package url
@@ -65,6 +65,11 @@ while getopts :p:a:k:e:hs optname; do
 	  log "Setting the storage account key"
       STORAGE_ACCOUNT_KEY="${OPTARG}"
       GEN_CONF_FILE="true"
+      ;;
+    t)  #set table names
+	  log "Setting the diagnostics log table names"
+      TABLE_NAMES="${OPTARG}"
+      USE_TABLE_NAMES="true"
       ;;
     e)  #set the encoded configuration string
 	  log "Setting the encoded configuration string"
@@ -111,10 +116,22 @@ fi
 if [ ! -z $GEN_CONF_FILE ] 
 then
   log "Generating Logstash Config"
-  echo "input { azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}" > ~/logstash.conf
+  echo "input { " > ~/logstash.conf
+  if [ ! -z $USE_TABLE_NAMES ] 
+  then
+  log "Using specified table names"
+  TABLE_ARRAY=$(echo $TABLE_NAMES | tr ";" "\n")
+  for TABLE in $TABLE_ARRAY
+     do
+       echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => '$TABLE'}" >> ~/logstash.conf      
+  done
+  else
+  log "Using Default table names"
+  echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADLogsTable'}" >> ~/logstash.conf
   echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADPerformanceCountersTable'}" >> ~/logstash.conf
   echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADWindowsEventLogsTable'}" >> ~/logstash.conf
   echo "azurewadtable {account_name => '$STORAGE_ACCOUNT_NAME' access_key => '$STORAGE_ACCOUNT_KEY' table_name => 'WADDiagnosticInfrastructureLogsTable'}" >> ~/logstash.conf
+  fi
   echo " }" >> ~/logstash.conf
   echo "output {elasticsearch {host => 'localhost' protocol => 'http' port => 9200 }}" >> ~/logstash.conf
   cat ~/logstash.conf

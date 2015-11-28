@@ -19,12 +19,6 @@
                 "description": "Elasticsearch version to install"
             }
         },
-        "encodedConfigString": {
-            "type": "string",
-            "metadata": {
-                "description": "Base64 encoded Logstash configuration string."
-            }
-        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -43,16 +37,23 @@
           "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
         }
       },
-      "diagnosticsStorageAccountName": {
+      "existingDiagnosticsStorageAccountName": {
         "type": "string",
         "metadata": {
           "description": "Diagnostics storage account name."
         }
       },
-      "diagnosticsStorageAccountKey": {
-            "type": "securestring",
+      "existingDiagnosticsStorageAccountKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Key for diagnostics storage account"
+        }
+      },
+      "diagnosticsTableNames": {
+        "type": "string",
+        "defaultValue": "WADPerformanceCountersTable;WADWindowsEventLogsTable;WADDiagnosticsInfrastructureLogsTable;WADLogsTable",
             "metadata": {
-                "description": "Key for diagnostics storage account"
+                "description": "List of tables containing diagnostics data separated by ;"
             }
         },
         "ubuntuOSVersion": {
@@ -93,7 +94,12 @@
         "virtualNetworkName": "MyVNET",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
       "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-      "baseURL": "https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/"
+      "baseURL": "https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/",
+      "install_elksimple": "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/elk-simple-install-ubuntu.sh')]",
+      "install_es": "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/elasticsearch-ubuntu-install.sh')]",
+      "install_logstash": "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/logstash-install-ubuntu.sh')]",
+      "install_kibana4": "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/kibana4-install-ubuntu.sh')]",
+      "ruby_azurewadtable": "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/azurewadtable.rb')]"
     },
     "resources": [
         {
@@ -235,8 +241,8 @@
                 "type": "CustomScriptForLinux",
                 "typeHandlerVersion": "1.2",
                 "settings": {
-                    "fileUris": [ "[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/elk-simple-install-ubuntu.sh')]", "[concat(variables('baseURL'),'AzureRM/logstash-on-ubuntu/logstash-install-ubuntu.sh')]","[concat(variables('baseURL'),'AzureRM/elk-simple-on-ubuntu/kibana4-install-ubuntu.sh')]","https://raw.githubusercontent.com/juliusl/azure-quickstart-templates/master/elasticsearch/elasticsearch-ubuntu-install.sh","[concat(variables('baseURL'),'logstash-extension/inputs/azurewadtable.rb')]"],
-                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('diagnosticsStorageAccountName'), ' -k ', parameters('diagnosticsStorageAccountKey'))]"
+                    "fileUris": [ "[variables('install_elksimple')]", "[variables('install_es')]","[variables('install_logstash')]","[variables('install_kibana4')]","[variables('ruby_azurewadtable')]"],
+                    "commandToExecute": "[concat('bash ./elk-simple-install-ubuntu.sh -n ', parameters('esClusterName'), ' -v ', parameters('esVersion'), ' -d ', variables('esDiscoveryHosts'), ' -a ', parameters('existingDiagnosticsStorageAccountName'), ' -k ', parameters('existingDiagnosticsStorageAccountKey'))]"
                 }
             }
         }
