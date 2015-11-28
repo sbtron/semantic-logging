@@ -19,7 +19,14 @@ Below are the parameters that the template expects:
 |existingDiagnosticsStorageAccountKey  | The diagnostics storage account key is needed to enable logstash plugin to read data from the storage account. 
 |diagnosticsTableNames    |The tables containing diagnostics data that you would like to import to ELK  |
 
-#Notes & Limitations
+## Updating logstash config on a running instance
+Use the Set-AzureWADTableConfig.ps1 powershell script to update the logstash configuration on a running instance of Logstash.
+
+	.\Set-AzureWADTableConfig.ps1 -VMName <VMNAme> -VMResourceGroup <VMResourceGroup> -DiagnosticsStorageAccount <DiagnosticsStorageAccountName> -DiagnosticsStorageAccountKey <DiagnosticsStorageAccountName> -DiagnosticsTables <TableNames>
+
+The -DiagnosticsTables parameter is optional and accepts a ';' separated list of table names. If the parameter is not specified the script will default to using standard WAD table names - *WADPerformanceCountersTable;WADWindowsEventLogsTable;WADDiagnosticsInfrastructureLogsTable;WADLogsTable;*
+
+##Notes & Limitations
 - Currently only supports Logstash version 1.4.2
 
 
