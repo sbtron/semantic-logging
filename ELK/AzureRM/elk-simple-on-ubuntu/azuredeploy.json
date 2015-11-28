@@ -2,7 +2,24 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "esClusterName": {
+      "ubuntuOSVersion": {
+            "type": "string",
+            "defaultValue": "14.04.2-LTS",
+            "allowedValues": [
+                "12.04.2-LTS",
+                "12.04.3-LTS",
+                "12.04.4-LTS",
+                "12.04.5-LTS",
+                "12.10",
+                "14.04.2-LTS",
+                "14.10",
+                "15.04"
+            ],
+            "metadata": {
+                "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.2-LTS, 12.04.3-LTS, 12.04.4-LTS, 12.04.5-LTS, 12.10, 14.04.2-LTS, 14.10, 15.04."
+            }
+        },  
+      "esClusterName": {
             "type": "string",
             "defaultValue": "elasticsearch",
             "metadata": {
@@ -54,23 +71,6 @@
         "defaultValue": "WADPerformanceCountersTable;WADWindowsEventLogsTable;WADDiagnosticsInfrastructureLogsTable;WADLogsTable",
             "metadata": {
                 "description": "List of tables containing diagnostics data separated by ;"
-            }
-        },
-        "ubuntuOSVersion": {
-            "type": "string",
-            "defaultValue": "14.04.2-LTS",
-            "allowedValues": [
-                "12.04.2-LTS",
-                "12.04.3-LTS",
-                "12.04.4-LTS",
-                "12.04.5-LTS",
-                "12.10",
-                "14.04.2-LTS",
-                "14.10",
-                "15.04"
-            ],
-            "metadata": {
-                "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.2-LTS, 12.04.3-LTS, 12.04.4-LTS, 12.04.5-LTS, 12.10, 14.04.2-LTS, 14.10, 15.04."
             }
         }
     },
