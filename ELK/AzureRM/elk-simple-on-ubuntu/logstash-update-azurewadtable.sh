@@ -45,6 +45,7 @@ log()
 #Loop through options passed
 while getopts :a:k:t:e:h optname; do
     log "Option $optname set with value ${OPTARG}"
+  case $optname in
     h)  #show help
       help
       exit 2
