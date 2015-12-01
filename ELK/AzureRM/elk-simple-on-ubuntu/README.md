@@ -26,6 +26,36 @@ Use the Set-AzureWADTableConfig.ps1 powershell script to update the logstash con
 
 The -DiagnosticsTables parameter is optional and accepts a ';' separated list of table names. If the parameter is not specified the script will default to using standard WAD table names - *WADPerformanceCountersTable;WADWindowsEventLogsTable;WADDiagnosticsInfrastructureLogsTable;WADLogsTable;*
 
+## Linking to this template
+You can link to this the ELK template by adding the following to the resources section. Through this approach you can easily setup the VMs where you application runs and also the ELK VM as part of one template deployment.
+
+	{ 
+     "apiVersion": "2015-01-01", 
+     "name": "nestedTemplate", 
+     "type": "Microsoft.Resources/deployments", 
+     "properties": { 
+       "mode": "incremental", 
+       "templateLink": {
+          "uri":"https://raw.githubusercontent.com/sbtron/semantic-logging/elk/ELK/AzureRM/elk-simple-on-ubuntu/azuredeploy.json",
+          "contentVersion":"1.0.0.0"
+       }, 
+       "parameters": {
+        "adminUsername": { "value": "[parameters('adminUsername')]" },
+        "adminPassword": { "value": "[parameters('adminPassword')]" },
+        "existingDiagnosticsStorageAccountName": { "value": "[variables('diagnosticsStorageName')]" },
+        "existingDiagnosticsStorageAccountKey": { "value": "[listkeys(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', variables('diagnosticsStorageResourceGroup'), '/providers/','Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageName')), '2015-06-15').key1]" }
+       }  
+     } 
+    } 
+
+Make sure the base template includes the appropriate parameters for *adminUsername* and *adminPassword* and also defines the *diagnosticsStorageAccountName* and *diagnosticsStorageResourceGroup*. 
+
+For example here is a simple windows VM with diagnostics turned on which is linked to the ELK template setup to collect diagnostics data from the Windows VM.
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsbtron%2Fsemantic-logging%2Felk%2FELK%2FAzureRM%2Felk-simple-on-ubuntu%2Fvm-win-diagnostics-elk.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
 ##Notes & Limitations
 - Currently only supports Logstash version 1.4.2
 
