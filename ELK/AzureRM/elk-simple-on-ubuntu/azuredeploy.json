@@ -50,6 +50,7 @@
     },
     "dnsNameForPublicIP": {
       "type": "string",
+      "defaultValue": "[concat('elk-',uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
